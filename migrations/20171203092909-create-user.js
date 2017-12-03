@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Users', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('Users', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -29,6 +29,13 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('NOW')
       }
+    });
+
+    await queryInterface.addIndex('Users', ['username'], {
+      unique: true
+    });
+    return await queryInterface.addIndex('Users', ['email'], {
+      unique: true
     });
   },
   down: (queryInterface, Sequelize) => {
