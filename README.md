@@ -1,8 +1,8 @@
-assignment_okodin
+solution_okodin
 =================
 
 
-A dating app using complex forms for Vikings to find their perfect match because thunder gods need love too :)
+Build a dating app so Viking thunder gods can find love <3
 
 
 
