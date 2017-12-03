@@ -87,10 +87,9 @@ app.use(morganToolkit());
 // ----------------------------------------
 // Routes
 // ----------------------------------------
-app.use('/', (req, res) => {
-  req.flash('Hi!');
-  res.render('welcome/index');
-});
+const usersRouter = require('./routers/users');
+app.get('/', (req, res) => res.redirect('/users'));
+app.use('/users', usersRouter);
 
 
 // ----------------------------------------
