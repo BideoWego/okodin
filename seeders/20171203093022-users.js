@@ -16,11 +16,11 @@ module.exports = {
     */
 
     const users = [];
-    for (let profileId = 1; profileId <= 10; profileId++) {
+    for (let profileId = 1; profileId <= 100; profileId++) {
       users.push({
         username: `foobar${ profileId }`,
         email: `foobar${ profileId }@gmail.com`,
-        profileId: profileId
+        profileId
       });
     }
     return queryInterface.bulkInsert('Users', users);

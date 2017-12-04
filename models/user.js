@@ -8,5 +8,12 @@ module.exports = (sequelize, DataTypes) => {
     profileId: DataTypes.INTEGER
   });
 
+  User.associate = function(models) {
+    // associations can be defined here
+    User.hasOne(models.Profile, {
+      foreignKey: "userId"
+    });
+  };
+
   return User;
 };
