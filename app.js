@@ -5,7 +5,7 @@ const app = express();
 // ----------------------------------------
 // App Variables
 // ----------------------------------------
-app.locals.appName = 'My App';
+app.locals.appName = 'OkOdin';
 
 
 // ----------------------------------------
@@ -87,6 +87,10 @@ app.use(morganToolkit());
 // ----------------------------------------
 // Routes
 // ----------------------------------------
+const { auth, router: sessionsRouter } = require('./routers/sessions');
+app.use(auth);
+app.use('/', sessionsRouter);
+
 const usersRouter = require('./routers/users');
 app.get('/', (req, res) => res.redirect('/users'));
 app.use('/users', usersRouter);
