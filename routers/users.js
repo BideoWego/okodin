@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const {
   User,
-  sequelize
+  Profile,
+  sequelize,
+  Sequelize: { Op }
 } = require('../models');
 const h = require('../helpers');
 
@@ -20,7 +22,10 @@ const _extractParams = req => ({
 // ----------------------------------------
 router.get('/', async (req, res, next) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      include: Profile,
+      where: { id: { [Op.notIn]: [req.user.id] } }
+    });
     res.render('users/index', { users });
   } catch (e) {
     next(e);
@@ -32,6 +37,11 @@ router.get('/', async (req, res, next) => {
 // New
 // ----------------------------------------
 router.get('/new', (req, res) => {
+  if (req.session.userId) {
+    req.flash('Please log out to sign up');
+    return res.redirect(h.rootPath());
+  }
+
   res.render('users/new');
 });
 
@@ -58,7 +68,7 @@ router.get('/:id/edit', async (req, res, next) => {
 // ----------------------------------------
 router.get('/:id', async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id, { include: Profile });
     if (!user) {
       req.flash('error', 'User not found');
       return res.redirect(h.usersPath());
@@ -77,8 +87,13 @@ router.post('/', async (req, res, next) => {
   try {
     const { userParams } = _extractParams(req);
 
-    const user = await User.create(userParams);
-    res.redirect(h.userPath(user.id));
+    await sequelize.transaction(async t => {
+      t = { transaction: t };
+      const user = await User.create(userParams, t);
+      const profile = await Profile.create({ userId: user.id }, t);
+      req.flash('success', 'User created! Please login')
+      res.redirect(h.loginPath());
+    });
   } catch (e) {
     next(e);
   }

@@ -7,16 +7,28 @@ const {
   Sequelize: { Op }
 } = require('../models');
 const h = require('../helpers');
+const url = require('url');
 
 
-const _unprotectedPaths = [
-  h.rootPath(),
-  h.newUserPath(),
-  h.loginPath(),
-  h.logoutPath(),
-  '/sessions'
+const _unprotectedRoutes = [
+  { get: h.newUserPath() },
+  { get: h.loginPath() },
+  { get: h.logoutPath() },
+  { delete: h.logoutPath() },
+  { post: '/sessions' },
+  { post: '/users' }
 ];
-const _isUnprotected = path => _unprotectedPaths.includes(path);
+const _isUnprotected = req => {
+  for (let i = 0; i < _unprotectedRoutes.length; i++) {
+    const route = _unprotectedRoutes[i];
+    const method = req.method.toLowerCase();
+    const path = req.path;
+    if (route[method] === path) {
+      return true;
+    }
+  }
+  return false;
+};
 
 
 
@@ -24,7 +36,7 @@ const _isUnprotected = path => _unprotectedPaths.includes(path);
 // Auth
 // ----------------------------------------
 app.use(async (req, res, next) => {
-  if (_isUnprotected(req.path)) {
+  if (_isUnprotected(req)) {
     return next();
   }
 
@@ -59,7 +71,9 @@ router.get('/login', (req, res) => {
 router.post('/sessions', async (req, res, next) => {
   try {
     const query = {
-      [Op.or]: [{ email: req.body.user }, { username: req.body.user }]
+      where: {
+        [Op.or]: [{ email: req.body.user }, { username: req.body.user }]
+      }
     };
     const user = await User.findOne(query);
     if (!user) {

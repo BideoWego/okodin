@@ -20,7 +20,7 @@ module.exports = {
     for (let userId = 1; userId <= 100; userId++) {
       profiles.push({
         birthday: new Date(
-          1970 + Math.floor(Math.random() * 20),
+          1978 + Math.floor(Math.random() * 20),
           Math.floor(Math.random() * 12),
           1
         ),

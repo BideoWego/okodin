@@ -1,1 +1,40 @@
-show.handlebars
+
+
+<header class="page-header row">
+  <div class="col-md-4">
+    <img src="{{ userImagePath user }}" alt="User image" class="img-responsive">
+  </div>
+  <div class="col-md-8">
+    <h1>{{ user.username }}</h1>
+    <p>{{ age user.Profile.birthday }} years old, from {{ user.Profile.city }}</p>
+  </div>
+</header>
+
+
+<div class="details">
+  <div class="col-md-8">
+    <h2>About Me</h2>
+    <p>{{ user.Profile.about }}</p>
+
+    <h2>Talents</h2>
+    <p>{{ user.Profile.talents }}</p>
+
+    <h2>Favorite Things</h2>
+    <p>{{ user.Profile.favorites }}</p>
+
+    <h2>Why You Should Message Me</h2>
+    <p>{{ user.Profile.incentive }}</p>
+
+    <a href="#" class="btn btn-lg btn-primary">Message Me!</a>
+  </div>
+  <div class="col-md-4">
+    <h3>Basic Info</h3>
+    <p>Gender: {{ user.Profile.gender }}</p>
+    <p>Marital Status: {{ user.Profile.maritalStatus }}</p>
+    <p>Height: {{ feetInches user.Profile.height }}</p>
+    <p>Body Type: {{ user.Profile.bodyType }}</p>
+    <p>Education: {{ user.Profile.education }}</p>
+    <p>Number of children: {{ user.Profile.numChildren }}</p>
+    <p>Occupation: {{ user.Profile.occupation }}</p>
+  </div>
+</div>
