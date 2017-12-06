@@ -23,7 +23,7 @@ module.exports = {
         profileId
       });
     }
-    return queryInterface.bulkInsert('Users', users);
+    return queryInterface.bulkInsert('Users', users, { logging: false });
   },
 
   down: (queryInterface, Sequelize) => {

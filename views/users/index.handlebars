@@ -5,6 +5,67 @@
 </header>
 
 
+<h2>Search</h2>
+<form action="/users">
+
+  {{!-- Gender --}}
+  <h3>Gender</h3>
+  {{#each genders as |gender| }}
+    <div class="checkbox">
+      <label for="gender_{{ gender }}">
+        <input type="checkbox" name="gender[]" id="gender_{{ gender }}" value="male"> {{ gender }}
+      </label>
+    </div>
+  {{/each }}
+
+  {{!-- Marital Status --}}
+  <h3>Marital Status</h3>
+  <select class="form-control" name="martial_status" id="martial_status">
+    {{#each maritalStatuses as |maritalStatus| }}
+      <option value="{{ maritalStatus }}">{{ maritalStatus }}</option>
+    {{/each }}
+  </select>
+
+  {{!-- Height --}}
+  <h3>Height</h3>
+  <select class="form-control" name="height[min]" id="height_min">
+    {{#times start=48 stop=84 as |inches| }}
+      <option value="{{ inches }}">{{ feetInches inches }}</option>
+    {{/times}}
+  </select>
+  <br>
+  <select class="form-control" name="height[min]" id="height_min">
+    {{#times start=48 stop=84 as |inches| }}
+      <option value="{{ inches }}">{{ feetInches inches }}</option>
+    {{/times}}
+  </select>
+
+  {{!-- Body Type --}}
+  <h3>Body Type</h3>
+  {{#each bodyTypes as |bodyType| }}
+    <div class="checkbox">
+      <label for="body_types">
+        <input type="checkbox" name="body_types[]" id="body_types" value="{{ bodyType }}"> {{ bodyType }}
+      </label>
+    </div>
+  {{/each }}
+
+  {{!-- Num Kids --}}
+  <h3>Number of Kids</h3>
+  <select class="form-control" name="num_kids" id="num_kids" >
+    {{#times start=0 stop=5 as |numKids| }}
+      <option value="{{ numKids }}">{{ numKids }}</option>
+    {{/times}}
+    <option value="5+">5+</option>
+  </select>
+  <br>
+
+  <div class="form-group">
+    <input type="submit" class="btn btn-primary">
+  </div>
+</form>
+
+
 {{#if users.length }}
   <div id="search-results" class="row">
     {{#each users as |user| }}

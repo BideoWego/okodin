@@ -26,7 +26,12 @@ router.get('/', async (req, res, next) => {
       include: Profile,
       where: { id: { [Op.notIn]: [req.user.id] } }
     });
-    res.render('users/index', { users });
+
+    const genders = Profile.GENDERS;
+    const maritalStatuses = Profile.MARITAL_STATUSES;
+    const bodyTypes = Profile.BODY_TYPES;
+
+    res.render('users/index', { users, genders, maritalStatuses, bodyTypes });
   } catch (e) {
     next(e);
   }

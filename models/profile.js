@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
 
 
   Profile.GENDERS = ['male', 'female'];
-  Profile.MARITAL_STATUSES = ['single'];
+  Profile.MARITAL_STATUSES = ['single', 'dating', 'married', 'attached'];
   Profile.BODY_TYPES = ['athletic', 'average', 'slim', 'portly'];
 
 

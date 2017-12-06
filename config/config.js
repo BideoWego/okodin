@@ -1,4 +1,14 @@
+const { Sequelize: { Op } } = require('sequelize');
 require('dotenv').config();
+
+// ----------------------------------------
+// Logger
+// ----------------------------------------
+const highlight = require('cli-highlight').highlight;
+const logger = query => console.log(
+  highlight(query, { language: 'sql', ignoreIllegals: true })
+);
+
 
 module.exports = {
   "development": {
@@ -6,16 +16,22 @@ module.exports = {
     "password": process.env.POSTGRES_PASSWORD,
     "database": "assignment_okodin_development",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    operatorsAliases: Op,
+    "logging": logger
   },
   "test": {
     "username": process.env.POSTGRES_USERNAME,
     "password": process.env.POSTGRES_PASSWORD,
     "database": "assignment_okodin_test",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    operatorsAliases: Op,
+    "logging": logger
   },
   "production": {
-    "use_env_variable": "DATABASE_URL"
+    "use_env_variable": "DATABASE_URL",
+    operatorsAliases: Op,
+    "logging": logger
   }
 };
