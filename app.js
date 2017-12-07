@@ -91,8 +91,9 @@ const { auth, router: sessionsRouter } = require('./routers/sessions');
 app.use(auth);
 app.use('/', sessionsRouter);
 
-const usersRouter = require('./routers/users');
+const { searchSettings, router: usersRouter } = require('./routers/users');
 app.get('/', (req, res) => res.redirect('/users'));
+app.use(searchSettings);
 app.use('/users', usersRouter);
 
 

@@ -5,6 +5,8 @@
 </header>
 
 
+{{{debug searchSettings }}}
+
 <h2>Search</h2>
 <form action="/users">
 
@@ -13,30 +15,46 @@
   {{#each genders as |gender| }}
     <div class="checkbox">
       <label for="gender_{{ gender }}">
-        <input type="checkbox" name="gender[]" id="gender_{{ gender }}" value="male"> {{ gender }}
+        <input type="checkbox" name="gender[]" id="gender_{{ gender }}" value="{{ gender }}" {{#if (lookup ../searchSettings.gender gender) }}checked{{/if }}> {{ gender }}
       </label>
     </div>
   {{/each }}
 
   {{!-- Marital Status --}}
   <h3>Marital Status</h3>
-  <select class="form-control" name="martial_status" id="martial_status">
-    {{#each maritalStatuses as |maritalStatus| }}
-      <option value="{{ maritalStatus }}">{{ maritalStatus }}</option>
-    {{/each }}
+  {{#each maritalStatuses as |maritalStatus| }}
+    <div class="checkbox">
+      <label for="martial_status_{{ maritalStatus }}">
+        <input type="checkbox" name="marital_status[]" id="martial_status_{{ maritalStatus }}" value="{{ maritalStatus }}" {{#if (lookup ../searchSettings.maritalStatuses maritalStatus) }}checked{{/if }}> {{ maritalStatus }}
+      </label>
+    </div>
+  {{/each }}
+
+  {{!-- Age --}}
+  <h3>Age</h3>
+  <select class="form-control" name="age[min]" id="age_min">
+    {{#times start=18 stop=99 as |years| }}
+      <option value="{{ years }}" {{#if (eq searchSettings.age.min years) }}selected{{/if }}>{{ years }}</option>
+    {{/times}}
+  </select>
+  <br>
+  <select class="form-control" name="age[max]" id="age_max">
+    {{#times start=18 stop=99 as |years| }}
+      <option value="{{ years }}" {{#if (eq searchSettings.age.max years) }}selected{{/if }}>{{ years }}</option>
+    {{/times}}
   </select>
 
   {{!-- Height --}}
   <h3>Height</h3>
   <select class="form-control" name="height[min]" id="height_min">
     {{#times start=48 stop=84 as |inches| }}
-      <option value="{{ inches }}">{{ feetInches inches }}</option>
+      <option value="{{ inches }}" {{#if (eq searchSettings.height.min inches) }}selected{{/if }}>{{ feetInches inches }}</option>
     {{/times}}
   </select>
   <br>
-  <select class="form-control" name="height[min]" id="height_min">
+  <select class="form-control" name="height[max]" id="height_max">
     {{#times start=48 stop=84 as |inches| }}
-      <option value="{{ inches }}">{{ feetInches inches }}</option>
+      <option value="{{ inches }}" {{#if (eq searchSettings.height.max inches) }}selected{{/if }}>{{ feetInches inches }}</option>
     {{/times}}
   </select>
 
@@ -44,20 +62,24 @@
   <h3>Body Type</h3>
   {{#each bodyTypes as |bodyType| }}
     <div class="checkbox">
-      <label for="body_types">
-        <input type="checkbox" name="body_types[]" id="body_types" value="{{ bodyType }}"> {{ bodyType }}
+      <label for="body_types_{{ bodyType }}">
+        <input type="checkbox" name="body_types[]" id="body_types_{{ bodyType }}" value="{{ bodyType }}" {{#if (lookup ../searchSettings.bodyTypes bodyType) }}checked{{/if }}> {{ bodyType }}
       </label>
     </div>
   {{/each }}
 
-  {{!-- Num Kids --}}
-  <h3>Number of Kids</h3>
-  <select class="form-control" name="num_kids" id="num_kids" >
-    {{#times start=0 stop=5 as |numKids| }}
-      <option value="{{ numKids }}">{{ numKids }}</option>
-    {{/times}}
-    <option value="5+">5+</option>
-  </select>
+  {{!-- Children --}}
+  <h3>Has Children?</h3>
+  <div class="checkbox">
+    <label for="has_children_yes">
+      <input type="checkbox" name="has_children_yes" id="has_children_yes" {{#if (lookup searchSettings.hasChildren 'yes') }}checked{{/if }}> Yes
+    </label>
+  </div>
+  <div class="checkbox">
+    <label for="has_children_no">
+      <input type="checkbox" name="has_children_no" id="has_children_no" {{#if (lookup searchSettings.hasChildren 'no') }}checked{{/if }}> No
+    </label>
+  </div>
   <br>
 
   <div class="form-group">

@@ -1,4 +1,5 @@
 const express = require('express');
+const app = express();
 const router = express.Router();
 const {
   User,
@@ -16,15 +17,93 @@ const _extractParams = req => ({
   }
 });
 
+const _searchSettings = settings => {
+  const r = (s, i) => {
+    s[i] = true;
+    return s;
+  };
+
+  const defaults = {
+    gender: Profile.GENDERS.reduce(r, {}),
+    maritalStatuses: Profile.MARITAL_STATUSES.reduce(r, {}),
+    bodyTypes: Profile.BODY_TYPES.reduce(r, {}),
+    height: {
+      min: 4 * 12,
+      max: 6 * 12
+    },
+    age: {
+      min: 20,
+      max: 45
+    },
+    hasChildren: ['yes', 'no'].reduce(r, {})
+  };
+
+  return Object.assign(defaults, settings)
+};
+
+const _buildSearchQuery = req => {
+  if (h.isEmpty(req.query)) {
+    return {};
+  }
+
+  const {
+    gender: genders = Profile.GENDERS,
+    marital_status: maritalStatuses = Profile.MARITAL_STATUSES,
+    body_types: bodyTypes = Profile.BODY_TYPES,
+    has_children_yes: hasChildrenYes,
+    has_children_no: hasChildrenNo,
+    age,
+    height
+  } = req.query;
+
+  let numChildren = 0;
+  let numChildrenOp = Op.gte;
+  if (hasChildrenYes && !hasChildrenNo) {
+    numChildren = 1;
+  } else if (!hasChildrenYes && hasChildrenNo) {
+    numChildrenOp = Op.eq;
+  }
+
+  const birthday = {
+    max: h.ago(age.min, 'years').endOf('year').toDate().toISOString().slice(0, 10),
+    min: h.ago(age.max, 'years').startOf('year').toDate().toISOString().slice(0, 10)
+  };
+
+  return {
+    [Op.and]: [
+      { gender: { [Op.in]: genders } },
+      { maritalStatus: { [Op.in]: maritalStatuses } },
+      { bodyType: { [Op.in]: bodyTypes } },
+      { numChildren: { [numChildrenOp]: numChildren } },
+      { birthday: sequelize.where(sequelize.fn('DATE_TRUNC', 'YEAR', sequelize.col('birthday')), '>=', birthday.min) },
+      { birthday: sequelize.where(sequelize.fn('DATE_TRUNC', 'YEAR', sequelize.col('birthday')), '<=', birthday.max) },
+      { height: { [Op.between]: [+height.min, +height.max] } }
+    ]
+  };
+};
+
+
+// ----------------------------------------
+// Search Settings
+// ----------------------------------------
+app.use((req, res, next) => {
+  req.session.searchSettings = _searchSettings(req.session.searchSettings);
+  res.locals.searchSettings = req.session.searchSettings;
+  next();
+});
+
 
 // ----------------------------------------
 // Index
 // ----------------------------------------
 router.get('/', async (req, res, next) => {
   try {
+    const query = _buildSearchQuery(req);
     const users = await User.findAll({
-      include: Profile,
-      where: { id: { [Op.notIn]: [req.user.id] } }
+      include: [{
+        model: Profile,
+        where: query
+      }]
     });
 
     const genders = Profile.GENDERS;
@@ -138,4 +217,4 @@ router.delete('/:id', async (req, res, next) => {
 
 
 
-module.exports = router;
+module.exports = { searchSettings: app, router };
