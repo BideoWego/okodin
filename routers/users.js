@@ -38,7 +38,7 @@ const _searchSettings = settings => {
     hasChildren: ['yes', 'no'].reduce(r, {})
   };
 
-  return Object.assign(defaults, settings)
+  return Object.assign(defaults, settings);
 };
 
 const _buildSearchQuery = req => {
@@ -71,6 +71,7 @@ const _buildSearchQuery = req => {
 
   return {
     [Op.and]: [
+      { userId: { [Op.ne]: req.session.userId } },
       { gender: { [Op.in]: genders } },
       { maritalStatus: { [Op.in]: maritalStatuses } },
       { bodyType: { [Op.in]: bodyTypes } },
@@ -80,6 +81,39 @@ const _buildSearchQuery = req => {
       { height: { [Op.between]: [+height.min, +height.max] } }
     ]
   };
+};
+
+
+const _updateSearchSettings = req => {
+  const r = (s, i) => {
+    s[i] = true;
+    return s;
+  };
+
+  const {
+    gender=[],
+    marital_status: maritalStatuses=[],
+    body_types: bodyTypes=[],
+    has_children_yes: hasChildrenYes,
+    has_children_no: hasChildrenNo,
+    age={},
+    height={}
+  } = req.query;
+
+  const hasChildren = [];
+  !(hasChildrenYes) || hasChildren.push('yes');
+  !(hasChildrenNo) || hasChildren.push('no');
+
+  const updated = {
+    gender: gender.reduce(r, {}),
+    maritalStatuses: maritalStatuses.reduce(r, {}),
+    bodyTypes: bodyTypes.reduce(r, {}),
+    height,
+    age,
+    hasChildren: hasChildren.reduce(r, {})
+  };
+
+  return Object.assign(req.session.searchSettings, updated);
 };
 
 
@@ -110,6 +144,7 @@ router.get('/', async (req, res, next) => {
     const maritalStatuses = Profile.MARITAL_STATUSES;
     const bodyTypes = Profile.BODY_TYPES;
 
+    _updateSearchSettings(req);
     res.render('users/index', { users, genders, maritalStatuses, bodyTypes });
   } catch (e) {
     next(e);
