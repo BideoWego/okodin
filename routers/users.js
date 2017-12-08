@@ -10,13 +10,42 @@ const {
 const h = require('../helpers');
 
 
-const _extractParams = req => ({
+// ----------------------------------------
+// Extract User Params
+// ----------------------------------------
+const _extractUserParams = req => ({
   userParams: {
     username: req.body.user.username,
     email: req.body.user.email
   }
 });
 
+
+// ----------------------------------------
+// Extract Profile Params
+// ----------------------------------------
+const _extractProfileParams = req => ({
+  profileParams: {
+    birthday: new Date(req.body.birthday),
+    city: req.body.city,
+    education: req.body.education,
+    occupation: req.body.occupation,
+    gender: req.body.gender,
+    maritalStatus: req.body.marital_status,
+    height: req.body.height,
+    bodyType: req.body.body_type,
+    numChildren: req.body.num_children,
+    about: req.body.about,
+    talents: req.body.talents,
+    favorites: req.body.favorites,
+    incentive: req.body.incentive
+  }
+});
+
+
+// ----------------------------------------
+// Set Default Search Settings
+// ----------------------------------------
 const _searchSettings = settings => {
   const r = (s, i) => {
     s[i] = true;
@@ -41,6 +70,10 @@ const _searchSettings = settings => {
   return Object.assign(defaults, settings);
 };
 
+
+// ----------------------------------------
+// Build Search Query
+// ----------------------------------------
 const _buildSearchQuery = req => {
   if (h.isEmpty(req.query)) {
     return {};
@@ -84,6 +117,9 @@ const _buildSearchQuery = req => {
 };
 
 
+// ----------------------------------------
+// Update Search Settings in Session
+// ----------------------------------------
 const _updateSearchSettings = req => {
   const r = (s, i) => {
     s[i] = true;
@@ -168,14 +204,19 @@ router.get('/new', (req, res) => {
 // ----------------------------------------
 // Edit
 // ----------------------------------------
-router.get('/:id/edit', async (req, res, next) => {
+router.get('/edit', async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.session.userId, { include: Profile });
     if (!user) {
       req.flash('error', 'User not found');
       return res.redirect(h.usersPath());
     }
-    res.render('users/edit', { user })
+
+    const genders = Profile.GENDERS;
+    const maritalStatuses = Profile.MARITAL_STATUSES;
+    const bodyTypes = Profile.BODY_TYPES;
+
+    res.render('users/edit', { user, genders, maritalStatuses, bodyTypes });
   } catch (e) {
     next(e);
   }
@@ -204,7 +245,7 @@ router.get('/:id', async (req, res, next) => {
 // ----------------------------------------
 router.post('/', async (req, res, next) => {
   try {
-    const { userParams } = _extractParams(req);
+    const { userParams } = _extractUserParams(req);
 
     await sequelize.transaction(async t => {
       t = { transaction: t };
@@ -222,15 +263,15 @@ router.post('/', async (req, res, next) => {
 // ----------------------------------------
 // Update
 // ----------------------------------------
-router.put('/:id', async (req, res, next) => {
+router.put('/', async (req, res, next) => {
   try {
-    const { userParams } = _extractParams(req);
+    const { profileParams } = _extractProfileParams(req);
 
-    await User.update(
-      userParams,
-      { where: { id: req.params.id }, limit: 1 }
+    await Profile.update(
+      profileParams,
+      { where: { userId: req.session.userId }, limit: 1 }
     );
-    res.redirect(h.userPath(req.params.id));
+    res.redirect(h.userPath(req.session.userId));
   } catch (e) {
     next(e);
   }
@@ -240,9 +281,9 @@ router.put('/:id', async (req, res, next) => {
 // ----------------------------------------
 // Destroy
 // ----------------------------------------
-router.delete('/:id', async (req, res, next) => {
+router.delete('/', async (req, res, next) => {
   try {
-    await User.destroy({ where: { id: req.params.id }, limit: 1 });
+    await User.destroy({ where: { id: req.session.userId }, limit: 1 });
     res.redirect(h.usersPath());
   } catch (e) {
     next(e);

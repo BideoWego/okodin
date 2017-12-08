@@ -1,1 +1,102 @@
-edit.handlebars
+
+
+<header class="page-header row">
+  <div class="col-md-4">
+    <img src="{{ userImagePath user }}" alt="User image" class="img-responsive">
+  </div>
+  <div class="col-md-8">
+    <h1>Editing: {{ user.username }}</h1>
+  </div>
+</header>
+
+
+<form action="{{ usersPath }}" method="POST">
+  <input type="hidden" name="_method" value="PUT">
+
+  <h2>Basic Info</h2>
+  <div class="form-group">
+    <label for="birthday">Birthday</label>
+    <input type="text" class="form-control" id="birthday" name="birthday" value="{{ user.Profile.birthday }}">
+  </div>
+  <div class="form-group">
+    <label for="city">City</label>
+    <input type="text" class="form-control" id="city" name="city" value="{{ user.Profile.city }}">
+  </div>
+  <div class="form-group">
+    <label for="education">Education</label>
+    <input type="text" class="form-control" id="education" name="education" value="{{ user.Profile.education }}">
+  </div>
+  <div class="form-group">
+    <label for="occupation">Occupation</label>
+    <input type="text" class="form-control" id="occupation" name="occupation" value="{{ user.Profile.occupation }}">
+  </div>
+
+  {{!-- Gender --}}
+  <h4>Gender</h4>
+  <select class="form-control" name="gender" id="gender">
+    {{#each genders as |gender| }}
+      <option id="gender_{{ gender }}" value="{{ gender }}" {{#if (eq ../user.Profile.gender gender) }}selected{{/if }}>{{ gender }}</option>
+    {{/each }}
+  </select>
+
+  {{!-- Marital Status --}}
+  <h4>Marital Status</h4>
+  <select class="form-control" name="marital_status" id="marital_status">
+    {{#each maritalStatuses as |maritalStatus| }}
+      <option id="martial_status_{{ maritalStatus }}" value="{{ maritalStatus }}" {{#if (eq ../user.Profile.maritalStatus maritalStatus) }}selected{{/if }}>{{ maritalStatus }}</option>
+    {{/each }}
+  </select>
+
+  {{!-- Height --}}
+  <h4>Height</h4>
+  <select class="form-control" name="height" id="height">
+    {{#times start=48 stop=84 as |inches| }}
+      <option value="{{ inches }}" {{#if (eq user.Profile.height inches) }}selected{{/if }}>{{ feetInches inches }}</option>
+    {{/times}}
+  </select>
+
+  {{!-- Body Type --}}
+  <h4>Body Type</h4>
+  <select class="form-control" name="body_type" id="body_type">
+    {{#each bodyTypes as |bodyType| }}
+      <option id="body_types_{{ bodyType }}" value="{{ bodyType }}" {{#if (eq ../user.Profile.bodyType bodyType) }}selected{{/if }}>{{ bodyType }}</option>
+    {{/each }}
+  </select>
+
+  {{!-- Children --}}
+  <h4>Number of Children</h4>
+  <select name="num_children" id="num_children" class="form-control">
+    <option value="0">0</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select>
+  <br>
+
+  <h2>Details</h2>
+  <div class="form-group">
+    <label for="about">About Me</label>
+    <textarea name="about" id="about" class="form-control">{{ user.Profile.about }}</textarea>
+  </div>
+  <div class="form-group">
+    <label for="talents">Talents</label>
+    <textarea name="talents" id="talents" class="form-control">{{ user.Profile.talents }}</textarea>
+  </div>
+  <div class="form-group">
+    <label for="favorites">Favorite Things</label>
+    <textarea name="favorites" id="favorites" class="form-control">{{ user.Profile.favorites }}</textarea>
+  </div>
+  <div class="form-group">
+    <label for="incentive">Why You Should Message Me</label>
+    <textarea name="incentive" id="incentive" class="form-control">{{ user.Profile.incentive }}</textarea>
+  </div>
+
+  <div class="form-group">
+    <input type="submit" class="btn btn-primary">
+  </div>
+</form>
+
+
+<br>

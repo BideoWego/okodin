@@ -6,7 +6,7 @@ const UsersHelper = {};
 UsersHelper.usersPath = () => '/users';
 UsersHelper.userPath = id => `/users/${ id }`;
 UsersHelper.newUserPath = () => '/users/new';
-UsersHelper.editUserPath = id => `/users/${ id }/edit`;
+UsersHelper.editUserPath = () => `/users/edit`;
 UsersHelper.destroyUserPath = id => `/users/${ id }/?_method=delete`;
 
 UsersHelper.userImagePath = user => `/assets/images/viking_${ user.Profile.gender === 'male' ? 'guy' : 'girl' }.jpg`;

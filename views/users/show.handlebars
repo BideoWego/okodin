@@ -7,6 +7,7 @@
   <div class="col-md-8">
     <h1>{{ user.username }}</h1>
     <p>{{ age user.Profile.birthday }} years old, from {{ user.Profile.city }}</p>
+    {{#if (eq currentUser.id user.id) }}<a href="{{ editUserPath user.id }}" class="btn btn-primary">Edit</a>{{/if }}
   </div>
 </header>
 
