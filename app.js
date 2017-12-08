@@ -96,6 +96,9 @@ app.get('/', (req, res) => res.redirect('/users'));
 app.use(searchSettings);
 app.use('/users', usersRouter);
 
+const viewsRouter = require('./routers/views');
+app.use('/views', viewsRouter);
+
 
 // ----------------------------------------
 // Template Engine

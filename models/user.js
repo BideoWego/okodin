@@ -13,6 +13,28 @@ module.exports = (sequelize, DataTypes) => {
     User.hasOne(models.Profile, {
       foreignKey: "userId"
     });
+
+    User.hasMany(models.View, {
+      foreignKey: "viewedId"
+    });
+
+    User.belongsToMany(models.User, {
+      foreignKey: "viewedId",
+      as: "Viewers",
+      through: {
+        model: models.View,
+        unique: false
+      }
+    });
+
+    User.belongsToMany(models.User, {
+      foreignKey: "viewerId",
+      as: "Vieweds",
+      through: {
+        model: models.View,
+        unique: false
+      }
+    });
   };
 
   return User;
