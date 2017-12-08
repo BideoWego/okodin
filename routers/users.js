@@ -76,7 +76,7 @@ const _searchSettings = settings => {
 // ----------------------------------------
 const _buildSearchQuery = req => {
   if (h.isEmpty(req.query)) {
-    return {};
+    return { [Op.and]: [{ userId: { [Op.ne]: req.session.userId } }] };
   }
 
   const {
@@ -121,6 +121,10 @@ const _buildSearchQuery = req => {
 // Update Search Settings in Session
 // ----------------------------------------
 const _updateSearchSettings = req => {
+  if (h.isEmpty(req.query)) {
+    return;
+  }
+
   const r = (s, i) => {
     s[i] = true;
     return s;
