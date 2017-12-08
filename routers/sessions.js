@@ -93,6 +93,7 @@ router.post('/sessions', async (req, res, next) => {
 // ----------------------------------------
 const logout = (req, res, next) => {
   delete req.session.userId;
+  delete req.session.searchSettings;
   if (req.session.userId) {
     req.flash('error', 'Unable to log out');
     res.redirect(req.session.backUrl);
