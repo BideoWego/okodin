@@ -4,10 +4,14 @@ require('dotenv').config();
 // ----------------------------------------
 // Logger
 // ----------------------------------------
-const highlight = require('cli-highlight').highlight;
-const logger = query => console.log(
-  highlight(query, { language: 'sql', ignoreIllegals: true })
-);
+let logger = false;
+const cmd = process.argv[process.argv.length - 1];
+if (!cmd.match(/db:/)) {
+  const highlight = require('cli-highlight').highlight;
+  logger = query => console.log(
+    highlight(query, { language: 'sql', ignoreIllegals: true })
+  );
+}
 
 
 module.exports = {
