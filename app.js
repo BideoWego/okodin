@@ -99,6 +99,9 @@ app.use('/users', usersRouter);
 const viewsRouter = require('./routers/views');
 app.use('/views', viewsRouter);
 
+const likesRouter = require('./routers/likes');
+app.use('/likes', likesRouter);
+
 
 // ----------------------------------------
 // Template Engine

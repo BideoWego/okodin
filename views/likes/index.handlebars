@@ -1,0 +1,53 @@
+
+
+<header class="page-header">
+  <h1>{{ currentUser.username }} Likes</h1>
+</header>
+
+
+<div class="row">
+
+  {{!-- Likers --}}
+  <div class="col-md-6">
+    <h2>They Liked You</h2>
+    {{#each likers as |liker| }}
+      <div class="media">
+        <div class="media-left">
+          <a href="{{ userPath liker.id }}">
+            <img class="media-object" src="{{ userImagePath liker }}" alt="User Image">
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">
+            <a href="{{ userPath liker.id }}">{{ liker.username }}</a>
+          </h4>
+          Liked you on:
+          <br>
+          {{ datetime liker.Like.createdAt }}
+        </div>
+      </div>
+    {{/each }}
+  </div>
+
+  {{!-- Likeds --}}
+  <div class="col-md-6">
+    <h2>You Liked Them</h2>
+    {{#each likeds as |liked| }}
+      <div class="media">
+        <div class="media-left">
+          <a href="{{ userPath liked.id }}">
+            <img class="media-object" src="{{ userImagePath liked }}" alt="User Image">
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">
+            <a href="{{ userPath liked.id }}">{{ liked.username }}</a>
+          </h4>
+          You liked them on:
+          <br>
+          {{ datetime liked.Like.createdAt }}
+        </div>
+      </div>
+    {{/each }}
+  </div>
+</div>

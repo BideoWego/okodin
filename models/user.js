@@ -10,10 +10,13 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function(models) {
     // associations can be defined here
+
+    // Profile
     User.hasOne(models.Profile, {
       foreignKey: "userId"
     });
 
+    // View
     User.hasMany(models.View, {
       foreignKey: "viewedId"
     });
@@ -32,6 +35,29 @@ module.exports = (sequelize, DataTypes) => {
       as: "Vieweds",
       through: {
         model: models.View,
+        unique: false
+      }
+    });
+
+    // Like
+    User.hasMany(models.Like, {
+      foreignKey: "likedId"
+    });
+
+    User.belongsToMany(models.User, {
+      foreignKey: "likedId",
+      as: "Likers",
+      through: {
+        model: models.Like,
+        unique: false
+      }
+    });
+
+    User.belongsToMany(models.User, {
+      foreignKey: "likerId",
+      as: "Likeds",
+      through: {
+        model: models.Like,
         unique: false
       }
     });
