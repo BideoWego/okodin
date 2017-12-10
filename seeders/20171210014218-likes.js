@@ -17,7 +17,8 @@ module.exports = {
     */
     const likes = [];
     for (let likerId = 1; likerId <= 100; likerId++) {
-      for (let likedId = 1; likedId <= 100; likedId++) {
+      const remainder = likerId % 2;
+      for (let likedId = 1 + remainder; likedId <= 100; likedId += 2) {
         if (likerId === likedId) {
           continue;
         }

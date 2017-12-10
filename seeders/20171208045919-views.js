@@ -17,7 +17,8 @@ module.exports = {
     */
     const views = [];
     for (let viewerId = 1; viewerId <= 100; viewerId++) {
-      for (let viewedId = 1; viewedId <= 100; viewedId++) {
+      const remainder = viewerId % 2;
+      for (let viewedId = 1 + remainder; viewedId <= 100; viewedId += 2) {
         if (viewerId === viewedId) {
           continue;
         }
