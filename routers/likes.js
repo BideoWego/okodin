@@ -31,16 +31,24 @@ router.get('/', async (req, res, next) => {
         ["Likeds", Like, "createdAt", "DESC"]
       ]
     });
+
     if (!user) {
       req.flash('error', 'User not found');
       return res.redirect(h.rootPath());
     }
+
     const { Likers: likers, Likeds: likeds } = user;
-    res.render('likes/index', { likers, likeds });
+    const mutuals = await user.mutualLikers();
+    res.render('likes/index', { likers, likeds, mutuals });
   } catch (e) {
     next(e);
   }
 });
+
+
+// ----------------------------------------
+// Create
+// ----------------------------------------
 
 
 

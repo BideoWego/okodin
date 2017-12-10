@@ -8,7 +8,7 @@
 <div class="row">
 
   {{!-- Likers --}}
-  <div class="col-md-6">
+  <div class="col-sm-12 col-md-4">
     <h2>They Liked You</h2>
     {{#each likers as |liker| }}
       <div class="media">
@@ -30,7 +30,7 @@
   </div>
 
   {{!-- Likeds --}}
-  <div class="col-md-6">
+  <div class="col-sm-12 col-md-4">
     <h2>You Liked Them</h2>
     {{#each likeds as |liked| }}
       <div class="media">
@@ -46,6 +46,28 @@
           You liked them on:
           <br>
           {{ datetime liked.Like.createdAt }}
+        </div>
+      </div>
+    {{/each }}
+  </div>
+
+  {{!-- Mutuals --}}
+  <div class="col-sm-12 col-md-4">
+    <h2>You Like Each Other</h2>
+    {{#each mutuals as |mutual| }}
+      <div class="media">
+        <div class="media-left">
+          <a href="{{ userPath mutual.id }}">
+            <img class="media-object" src="{{ userImagePath mutual }}" alt="User Image">
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">
+            <a href="{{ userPath mutual.id }}">{{ mutual.username }}</a>
+          </h4>
+          You mutual them on:
+          <br>
+          {{ datetime mutual.Like.[0].createdAt }}
         </div>
       </div>
     {{/each }}

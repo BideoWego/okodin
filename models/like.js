@@ -1,7 +1,8 @@
 'use strict';
 
-
 module.exports = (sequelize, DataTypes) => {
+
+  const { Op } = sequelize.Sequelize;
 
   const Like = sequelize.define('Like', {
     likerId: DataTypes.INTEGER,
