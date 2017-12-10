@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   User,
   Profile,
+  View,
   sequelize,
   Sequelize: { Op }
 } = require('../models');
@@ -237,6 +238,14 @@ router.get('/:id', async (req, res, next) => {
       req.flash('error', 'User not found');
       return res.redirect(h.usersPath());
     }
+
+    if (user.id !== req.session.userId) {
+      await View.create({
+        viewerId: req.session.userId,
+        viewedId: user.id
+      });
+    }
+
     res.render('users/show', { user })
   } catch (e) {
     next(e);
