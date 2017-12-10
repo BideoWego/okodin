@@ -19,10 +19,12 @@ router.get('/', async (req, res, next) => {
     const user = await User.findById(req.user.id, {
       include: [{
         model: User,
-        as: "Viewers"
+        as: "Viewers",
+        include: Profile
       }, {
         model: User,
-        as: "Vieweds"
+        as: "Vieweds",
+        include: Profile
       }],
       order: [
         ["Viewers", View, "createdAt", "DESC"],

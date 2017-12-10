@@ -6,12 +6,48 @@
 
 
 <div class="row">
+
+  {{!-- Viewers --}}
   <div class="col-md-6">
-    <h2>Viewers</h2>
-    {{{debug viewers }}}
+    <h2>They Viewed You</h2>
+    {{#each viewers as |viewer| }}
+      <div class="media">
+        <div class="media-left">
+          <a href="{{ userPath viewer.id }}">
+            <img class="media-object" src="{{ userImagePath viewer }}" alt="User Image">
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">
+            <a href="{{ userPath viewer.id }}">{{ viewer.username }}</a>
+          </h4>
+          Viewed you on:
+          <br>
+          {{ datetime viewer.View.createdAt }}
+        </div>
+      </div>
+    {{/each }}
   </div>
+
+  {{!-- Vieweds --}}
   <div class="col-md-6">
-    <h2>Vieweds</h2>
-    {{{debug vieweds }}}
+    <h2>You Viewed Them</h2>
+    {{#each vieweds as |viewed| }}
+      <div class="media">
+        <div class="media-left">
+          <a href="{{ userPath viewed.id }}">
+            <img class="media-object" src="{{ userImagePath viewed }}" alt="User Image">
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">
+            <a href="{{ userPath viewed.id }}">{{ viewed.username }}</a>
+          </h4>
+          You viewed them on:
+          <br>
+          {{ datetime viewed.View.createdAt }}
+        </div>
+      </div>
+    {{/each }}
   </div>
 </div>
